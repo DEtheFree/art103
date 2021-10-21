@@ -1,0 +1,93 @@
+body {
+  margin: 30px auto;
+  max-width: 1000px;
+  font-family: "Helvetica", "Arial", sans-serif;
+  line-height: 1.5;
+  padding: 30px 20px;
+  text-align: center;
+  background-image: url("../images/DiegoEsparza-Glitchme-thumbnail.jpg");
+}
+
+.background {
+  /*background-image: url("/images/DiegoEsparza-Glitchme-thumbnail.jpg");*/
+  background-size: cover;
+  background-repeat: no-repeat;
+  height: 100%;
+  text-align: center;
+}
+
+h1 {
+  padding: 20px 0px 10px 0px;
+}
+
+img {
+  display: block;
+  margin: 0px auto;
+  text-align: center;
+}
+
+.portfolio-item {
+  margin-top: 60px;
+  padding: 40px;
+  background-color: #f7f7f7;
+}
+
+div.gallery {
+  margin: 5px;
+  border: 1px solid #ccc;
+           /* float: left;*/
+  width: 180px;
+}
+
+div.gallery:hover {
+  border: 1px solid #777;
+}
+
+div.center_container {
+ width: 75vw; 
+  /*veiw width*/
+ margin-left: auto;
+ margin-right: auto;
+ text-align: center;
+}
+
+div.gallery img {
+ width: 100%;
+height: auto;
+}
+
+div.desc {
+padding: 15px;
+ text-align: center;
+ background-color: white;
+} 
+
+* {
+box-sizing: border-box;
+}
+
+.responsive {
+ padding: 0 6px;
+/*float: left; will make it break and go to the left outside it's container*/
+ /*width: 24.99999%;*/
+ display: inline-block;
+}
+
+@media only screen and (max-width: 700px) {
+ .responsive {
+ width: 49.99999%;
+ margin: 6px 0;
+}
+}
+
+@media only screen and (max-width: 500px) {
+.responsive {
+ width: 100%;
+ }
+ }
+
+.clearfix:after {
+content: "";
+display: table;
+clear: both;
+}
