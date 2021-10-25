@@ -5,11 +5,10 @@ body {
   line-height: 1.5;
   padding: 30px 20px;
   text-align: center;
-  background-image: url("../images/DiegoEsparza-Glitchme-thumbnail.jpg");
+
 }
 
 .background {
-  /*background-image: url("/images/DiegoEsparza-Glitchme-thumbnail.jpg");*/
   background-size: cover;
   background-repeat: no-repeat;
   height: 100%;
@@ -26,7 +25,7 @@ img {
   text-align: center;
 }
 
-.portfolio-item {
+.Item {
   margin-top: 60px;
   padding: 40px;
   background-color: #f7f7f7;
