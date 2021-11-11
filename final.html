@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" type="text/css" href="CSS/main.css">
+    <title>Art 106, Final</title>
+  </head>
+  <body>
+
+      <div class="portfolio-item">
+        <h1>Diego Esparza Art 106</h1>
+        <h2>Final</h2>
+        <h3>Original Proposal</h3>
+        <h4>For my final Prototype, what I had created is a little kinetic sculpture that is based on the connection rods on a train wheel. What my project will look like will be a board with 3 motors on the top all with little wheel attachments, joined by a connection rod. How it will work is by having two sensors on both sides and an IMU at the bottom. How I would like it ork is by the view standing on either side of the board and depending on where the person stands, will depend on the direction of where the wheels will turn. And the IMU will be used to make the wheels turn. Who it will work is by having the viewer shake the IMU and at a certain speed will it make the motors move. What I hope to accomplish besides getting all the hardware finished is to get the software up and running so that the motors can move in synchronicity as well as having both sensors hooked up but not conflict with one another.
+
+        Parts:
+        2 Ximimark 1Pcs VL53L0X Time-of-Flight Distance Sensor Breakout GY-53 VL53L0XV2 
+
+        3 Twotrees 4 Lead Nema17 Stepper Motor 42 Motor Nema 17 Motor 23mm 42BYGH 23MM 1.5A Motor
+
+        3 BIQU A4988 Compatible StepStick Stepper Motor Diver Module with Heat Sink
+
+        12V 4A 48W Power Supply
+
+        DEPEPE 30 Pcs 40 Pin 2.54mm Male and Female Pin Headers for Arduino Prototype Shield
+
+        Female to Male 2.54mm 0.1 in Jumper Wires
+
+        Update: So the difference between My final and my protoype is that in my final I was not able to get my IMU and my motion sensors to function with my motors. The problem was that due to time and online learning, I wasn't able to figure out how to map the readings from both senors and the IMU. I had previously had problems with my hardware since there was something wrong where my power suply wasing powering my motors and causing the wires to overheat and burn. But after a few days I figured out the problem and had to re-soilder my perfboard. Overall, with the expection of a few key features, all that is really missing is to finish up the software part of my final. But either was, I'm kinda pleased at how it turned out and functions.</h4>
+        <h3>Images</h3>
+        <img src="images/Proposal 1.png" width="640">
+        <img src="images/Proposal 2.png" width="640">
+        <img src="images/IMG_prto2.jpg" width="640">
+        <img src="images/IMG_box.jpg" width="640">
+        <img src="images/IMG_layout.jpg" width="640">
+        <h3>Video</h3>
+         <video controls width="800">
+            <source src="video_doc/wheel test2.MOV" type="video/mov">
+            <source src="video_doc/wheel test2.MOV" type="video/mp4">
+         </video>
+         <video controls width="800">
+            <source src="video_doc/Final_test.mov" type="video/mov">
+            <source src="video_doc/Final_test.mov" type="video/mp4">
+         </video>
+        <h3>Code</h3>
+        <h4>/*     Simple Stepper Motor Control Exaple Code
+           *      
+           *  by Dejan Nedelkovski, www.HowToMechatronics.com
+           *  
+           */
+          #include "Adafruit_VL53L0X.h"
+
+          Adafruit_VL53L0X lox = Adafruit_VL53L0X();
+
+          #include <Adafruit_MPU6050.h>
+          #include <Adafruit_Sensor.h>
+          #include <Wire.h>
+
+          Adafruit_MPU6050 mpu;
+           
+          // Defines pins numbers
+          const int stepPin1 = 3;
+          const int dirPin1 = 4; 
+          const int stepPin2 = 5;
+          const int dirPin2 = 6; 
+          const int stepPin3 = 7;
+          const int dirPin3 = 8; 
+
+          int customDelay,customDelayMapped; // Defines variables
+           
+          void setup() {
+            Serial.begin(115200);
+            while (!Serial) {
+              delay(10); // will pause Zero, Leonardo, etc until serial console opens
+            }
+
+            // Try to initialize!
+            if (!mpu.begin()) {
+              Serial.println("Failed to find MPU6050 chip");
+              while (1) {
+                delay(10);
+              }
+
+            Serial.println("Adafruit VL53L0X test");
+            if (!lox.begin()) {
+              Serial.println(F("Failed to boot VL53L0X"));
+              while(1);
+            }
+            // power 
+            Serial.println(F("VL53L0X API Simple Ranging example\n\n")); 
+              
+          }
+
+            mpu.setAccelerometerRange(MPU6050_RANGE_16_G);
+            mpu.setGyroRange(MPU6050_RANGE_250_DEG);
+            mpu.setFilterBandwidth(MPU6050_BAND_21_HZ);
+            Serial.println("");
+            delay(100);
+
+            // Sets the two pins as Outputs
+            pinMode(stepPin1,OUTPUT);
+            pinMode(dirPin1,OUTPUT);
+            pinMode(stepPin2,OUTPUT);
+            pinMode(dirPin2,OUTPUT);
+            pinMode(stepPin3,OUTPUT);
+            pinMode(dirPin3,OUTPUT);
+           
+            digitalWrite(dirPin1,HIGH); //Enables the motor to move in a particular direction
+            digitalWrite(dirPin2,HIGH); //Enables the motor to move in a particular direction
+            digitalWrite(dirPin3,HIGH); //Enables the motor to move in a particular direction
+            
+          }
+          void loop() {
+            VL53L0X_RangingMeasurementData_t measure;
+              
+            Serial.print("Reading a measurement... ");
+            lox.rangingTest(&measure, false); // pass in 'true' to get debug data printout!
+
+            if (measure.RangeStatus != 4) {  // phase failures have incorrect data
+              Serial.print("Distance (mm): "); Serial.println(measure.RangeMilliMeter);
+            } else {
+              Serial.println(" out of range ");
+            }
+            
+            customDelayMapped = speedUp(); // Gets custom delay values from the custom speedUp function
+            // Makes pules with custom delay, depending on the Potentiometer, from which the speed of the motor depends
+            digitalWrite(stepPin1, HIGH);
+            digitalWrite(stepPin2, HIGH);
+            digitalWrite(stepPin3, HIGH);
+            delayMicroseconds(customDelayMapped);
+            digitalWrite(stepPin1, LOW);
+            digitalWrite(stepPin2, LOW);
+            digitalWrite(stepPin3, LOW);
+            delayMicroseconds(customDelayMapped);
+          }
+          // Function for reading the Potentiometer
+          int speedUp() {
+            int customDelay = analogRead(A0); // Reads the potentiometer
+            int newCustom = map(customDelay, 0, 1023, 100, 1800); // Convrests the read values of the potentiometer from 0 to 1023 into desireded delay values (300 to 4000)
+            return newCustom;  
+
+             /* Get new sensor events with the readings */
+            sensors_event_t a, g, temp;
+            mpu.getEvent(&a, &g, &temp);
+
+            /* Print out the values */
+            Serial.print(a.acceleration.x);
+            Serial.print(",");
+
+            delay(10);</h4>
+      </div>
+   
+      <div class="portfolio-item">
+        <a href="index.html"><h1>Back</h1></a>
+      </div>
+
+  </body>
+</html>
+ <!-- website address: https://dethefree.github.io/Portfolio-content/
+ and also place some sort of picture there -->
